@@ -1,212 +1,228 @@
 import React, { useState } from 'react';
-import { Text, View, StyleSheet, Button } from 'react-native';
+import { DataTable } from 'react-native-paper';
+import { StyleSheet,Alert,ScrollView,Keyboard, Button, View, Text,TouchableOpacity,TextInput } from 'react-native';
+import AwesomeAlert from 'react-native-awesome-alerts';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
 
-class App2 extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      num: 0,
-    };
-  }
-  render() {
-    return (
-      <View style={{ paddingTop: 100 }}>
-        <Text style={styles.heading}>Class Based Component</Text>
-      </View>
-    );
-  }
-}
-export default function App() {
-   
-   const [getsolution,setSolution] = useState('') ;
-   const [getugn, setugnn]=useState(Math.floor(Math.random()*100));
-   const [getsgn,setsgn]=useState('');
-   const [getresult,setresult]=useState('');
-   const [gethint1,sethint1]=useState('');
-   const [getscore,setscore]=useState(0);
-   const [getturn,setturn]=useState(0);                    
-   const GAME_START_MESSAGE = 'Guess a Number';
-               
-   const [getNum, setNum] = useState(GAME_START_MESSAGE);
-
-   const numClick = (e) => {
-    if (getNum === 0) setNum(e);
-    else setNum(getNum + '' + e);
-  };
+const HomeScreen=({ navigation,route })=> {
+  
+   const [getText,setText]=useState(0); 
+   const [getDisText,setDisText]=useState();
+   const [getPer,setPer]=useState(0)
+   const [getList,setList]=useState([]);
+   const [getYS,setYS]=useState(0);
     
- const onClick = button => {
-        var z= getugn
-        if(getturn===5){
-            sethint1("You lost the game"),
-            setresult(z)   
-        }
-        else if(button === "CE"){
-          backspace()
-        }//NOW IF I CLICK CE BUTTON IT WILL DELETE VERY LAST DIGIT NUMBER   
-       
-        else if(button === "reset"){
-         // reset()
-        }//NOW IF I CLICK C BUTTON IT WILL RESET EVERYTHING
-         else if(button === "="){
-           calculate()
-           //TASK#01
-           var c=1;
-           c=getturn+1
-           setturn(c)         
-        }//NOW IF I CLICK = BUTTON THE RESULT WILL BE DISPLAYED 
-        else if(button === "h"){
-          hint1()
-        }    
-        else {
-            setSolution(getsolution+button)               
-         }//THIS IS EVENT LISTNER FOR EVERYOTHER BUTTON e.g 1, 2, 3, 4, 5,... etc
-      };
-      function hint1(){
-        var ugn=getugn;
-        var h=getugn;
-        var h1=h;
-        if(h<100){
-            h=h%5;
-            h+=2;
-            h-=2;
-            h+=ugn;
-            h1=h;
-            h1=ugn-5;
-            var z ="Range is "+h1+" and "+h
-            sethint1(z);
-            setscore(getscore-2);
-        }
-      }   
-      //THIS ARROW FUNCTION WILL BE INVOLVE IN CALCULATING CORRECT RESULTS
-     const calculate = () => {
-        console.log(getugn)
-        var sgn=getsolution;
-        var ugn=getugn;
-        console.log(ugn,sgn)
-        var s=getscore
-        if(ugn==sgn){
-          setresult("Correct. !!")
-          setscore(getscore+5)
-          setturn(getturn+5)
-          setSolution("")
-          setugnn(Math.floor(Math.random()*100))
-        }
-        else{
-          setresult("Wrong Guess");
-          setSolution("");
-        }
-      };
-      const backspace=()=>{
-             setSolution(getsolution.slice(0, -1))
-      }
-      const buttonClick=(e)=>{
-        e.preventDefault();
-        this.setState({button:e.target.name, countClick:this.state.countClick+1});
-      }    
-      //THIS WILL SET THE STATE OF THE INPUT TEXT TO EMPTY STRING
-      //TASK#03
-     const  reset = () => {
-       setSolution("");
-       sethint1("");
-       setresult("");
-       setscore(0);
-       setsgn(0);
-       setugnn(Math.floor(Math.random()*100));
-       setturn(0);
-      };
-      const Finish=() =>{
-        setNum(GAME_START_MESSAGE);
-        reset();
-      }
-      const PlayAgain =() =>{
-        setNum(0);
-        reset();
-      }
-  const message = (
-    <View>
-      <Text style={{ textAlign: 'center', fontSize: 20 }}>Welcome to Number Guessing Game</Text>
-      <Button title="Start Game" onPress={() => setNum(0)} />
-    </View>
-  );
-  const end = (
-    <View>
-    <Text style={{ textAlign: 'center', fontSize: 20 }}>Game ended</Text>
-    <Text style={{ textAlign: 'center', fontSize: 20 }}>Your score is {getscore}</Text>   
-      <Button title="Finish" onPress={Finish} />
-    <Button title="Play Again" onPress={PlayAgain} /> 
-    </View>
-  );
-  const gameView = (
-   <View style={styles.cbody}>     
-        <Text style={styles.textcontainer}>{getsolution}</Text>
-        <Text style={styles.textcontainer}>{getresult}</Text>
-        <Text style={styles.textcontainer}>Hint: {gethint1}</Text>
-        <Text style={styles.textcontainer}>Score: {getscore}</Text>
-        <Text style={styles.textcontainer}>Turn: {getturn}</Text>
-      
-      <View style={styles.viewcontainer}>
-        <View style={{width:50}}><Button  title="C" onPress={ onClick.bind(this,'reset')}/></View>
-        <View style={{width:50}}><Button  title="CE" onPress={ onClick.bind(this,'CE')}/></View>
-      </View>
-
-      <View style={styles.viewcontainer}>
-        <View style={styles.buttoncontainer}><Button  title="1" onPress={ onClick.bind(this,'1')}/></View>
-        <View style={styles.buttoncontainer}><Button  title="2" onPress={onClick.bind(this,'2')}/></View>
-        <View style={styles.buttoncontainer}><Button  title="3" onPress={onClick.bind(this,'3')}/></View>
-      </View>
-      
-      <View style={styles.viewcontainer}>
-        <View style={styles.buttoncontainer}><Button  title="4" onPress={onClick.bind(this,'4')}/></View>  
-        <View style={styles.buttoncontainer}><Button  title="5" onPress={onClick.bind(this,'5')}/></View>
-        <View style={styles.buttoncontainer}><Button title="6" onPress={onClick.bind(this,'6')}/></View>
-      </View>
-      
-      <View style={styles.viewcontainer}>
-        <View style={styles.buttoncontainer}><Button  title="7" onPress={onClick.bind(this,'7')}/></View>
-        <View style={styles.buttoncontainer}><Button  title="8" onPress={onClick.bind(this,'8')}/></View>
-        <View style={styles.buttoncontainer}><Button  title="9" onPress={onClick.bind(this,'9')}/></View>
-      </View>
-      
-      <View style={{flexDirection:"row", justifyContent:"space-between"}}>
-          <View style={styles.buttoncontainer}><Button  title="0" onPress={onClick.bind(this,'0')}/></View>
-          <View style={styles.buttoncontainer}><Button  title="h" onPress={hint1}/></View>
-          <View style={styles.buttoncontainer}><Button  title="=" onPress={onClick.bind(this,'=')}/></View>
-      </View>
-    </View>
-       );
-
+   const onPressSave=()=>{
+     if(getText.length>=1){
+          var x=getText
+          var y=getPer
+          var l=x*(y/100);
+          var z=parseFloat(x).toFixed(2)-parseFloat(l).toFixed(2);
+          var cal=parseFloat(z).toFixed(2);     
+          setList([
+              ...getList,
+              {key: Math.random().toString(),text:x,per:y,fp:cal}
+              ])
+        setText('')
+        setPer('')
+        setYS('')
+        setDisText('')
+     }    
+  }
+   
   return (
-    <View style={styles.container}>
-      {getNum === GAME_START_MESSAGE ? message : getturn<5 ? gameView: end }
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <View style={styles.container}>
+      <TouchableOpacity>
+          <Text style={styles.title}>Discount Calculator</Text>
+      </TouchableOpacity>
+      <View style={{borderWidth:2,padding:20,borderRadius:12}}>
+      <View style={styles.outview}>  
+          <TextInput
+              placeholder="Enter Price"
+              style={styles.textinput}
+              onChangeText={text=>setText(text)}
+              value={getText}
+              keyboardType="Decimal-pad"
+            />
+      </View>
+      <View style={styles.outview}>    
+         <TextInput
+              placeholder="Enter Percentage"
+              style={styles.textinput}
+              onChangeText={text => setPer(text)}
+              value={getPer}
+              keyboardType="Decimal-pad"
+            />
+        </View>
+        
+       <View style={styles.outview}>  
+          <Text style={styles.distext} >Final Price:  {getText>-1 ? parseFloat(getText-getText*(getPer/100).toFixed(2)): setText(0)}</Text>
+       </View>
+        <View style={styles.outview}>  
+          <Text style={styles.distext}>You Saved:  {getPer>-1 && getPer<101 ? parseFloat(getText*(getPer/100).toFixed(2)): setPer(0)}</Text>
+       </View>
+
+      <TouchableOpacity onPress={onPressSave} >
+          <Text style={styles.texstyles}>SAVE</Text>           
+      </TouchableOpacity>
+
+
+       React.useLayoutEffect(() =>{navigation.setOptions({
+       headerRight: () => (<Button title="See History" onPress={() => navigation.navigate('History',{text:getText,per:getPer,save:getYS,fp:getDisText,getlist:getList,setlist:setList})}/>
+      ),
+    })
+  }  
+        </View>      
     </View>
-  );  
+    </View>
+  );
 }
+
+const History=({ navigation ,route})=> {
+
+  const text=route.params.text;
+  const per=route.params.per;
+  const save=route.params.save;
+  const fp=route.params.fp;
+  const [getList,setList]=useState(route.params.getlist);
+  const [gtext,stext]=useState()
+
+  const deleteitem=(itemkey)=>{
+    setList(list => getList.filter(item=>item.key!=itemkey));
+  }
+  return (
+  <View style={styles.container}> 
+            
+      React.useLayoutEffect(() =>{navigation.setOptions({
+       headerLeft: () => (<Button title="Back" onPress={() => navigation.navigate('Home',{getListofHistory:getList,setListofHistory:setList})}/>
+      ),
+    })
+  }
+  
+  <DataTable>
+    <DataTable.Header>
+      <DataTable.Title  style={{flex:1,borderWidth:1}}>SR#</DataTable.Title>
+      <DataTable.Title style={{flex: 4,borderWidth:1}}>Orginal Price</DataTable.Title>
+      <DataTable.Title numeric style={{flex: 3,borderWidth:1}}>Discount</DataTable.Title>
+      <DataTable.Title numeric style={{flex: 4,borderWidth:1}}>Final Price</DataTable.Title>
+      <DataTable.Title style={{flex: 3,borderWidth:1}}>Delete</DataTable.Title>
+    </DataTable.Header>
+{getList.map((item,index)=>  
+    <DataTable.Row>
+      <DataTable.Cell style={{fkex:1,borderWidth:1}}>{index+1}</DataTable.Cell>
+      <DataTable.Cell style={{flex: 4,borderWidth:1}}>{item.text}</DataTable.Cell>
+      <DataTable.Cell numeric style={{flex: 3,borderWidth:1}}>{item.per}</DataTable.Cell>
+      <DataTable.Cell numeric style={{flex: 4,borderWidth:1}}>{item.fp}</DataTable.Cell>
+      <DataTable.Cell style={{flex: 3,borderWidth:1}}>
+       <TouchableOpacity onPress={()=>deleteitem(item.key)}>
+                <View style={styles.smallview}> 
+                     <Text style={styles.smalltext}>X</Text>                   
+    );
+                </View>
+        </TouchableOpacity>
+      </DataTable.Cell>
+    </DataTable.Row>
+    )}
+  </DataTable>
+</View>     
+  );
+}
+const Stack = createStackNavigator();
+
+function App() {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="Home"
+      screenOptions={{
+          headerStyle:{
+            backgroundColor:"lightblue"
+          }
+      }}
+      >
+        <Stack.Screen 
+        name="Home" 
+        component={HomeScreen} 
+        options={{
+          title:'Home page',
+          headerStyle:{
+            backgroundColor:"lightblue"
+          },
+          }}
+        />
+        <Stack.Screen name="History" component={History} />        
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+}
+
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    backgroundColor: '#ecf0f1',
-    padding: 8,
+  textinput:{
+    borderColor:'blue',
+    width:'99%',
+    fontSize:16,
+    padding:10,
+    borderBottomWidth:2,
   },
-  cbody:{
-  borderRadius:1,
-  borderColor:"black",
-  alignItems:"center",
+  distext:{
+    fontSize:16,
+    borderBottomColor:"blue",
+    borderWidth:2,
+    width:"95%",
+    padding:10,
   },
-  textcontainer:{
-  padding:15,
-      textAlign:"center",
-      fontSize:20,
-  },
-  buttoncontainer:{
-    width:33
-  },
-  viewcontainer:{
-    flexDirection:"row", 
+ outview:{
     justifyContent:"space-between",
+    flexDirection:"row",
+    width:"90%",
+    alignItems:"center",
+    paddingLeft:40,  
   },
-    heading: {
-    fontSize: 20,
-    textAlign: 'center',
+  title:{
+    fontSize:24,
+    color:'`#008b8b',
+    fontWeight:"bold",
+    backgroundColor:"darkgray",
+    borderRadius:15,
+    padding:10,
+    paddingLeft:40,
+    paddingBottom:20,
+    paddingRight:30, 
+    justifyContent:"center",
+    alignItems:"center",
   },
-});
+  texstyles:{
+    backgroundColor:"green",
+    borderRadius:15,
+    padding:10,
+    justifyContent:"center",
+    alignItems:"center",
+    color:"white",
+    fontWeight:"bold",
+    paddingLeft:90,
+    paddingRight:20, 
+    marginTop:20,
+  },
+  smallview:{
+    backgroundColor:"red", 
+    borderRadius:50, 
+    padding:5,
+    width:30,
+   justifyContent:"center",
+   alignItems:"center",
+  },
+  smalltext:{
+    fontSize:26,
+    fontWeight:"bold"
+  },
+  container: {
+    flex:1,
+    backgroundColor:'#ecf0f1',
+    paddingTop:5,
+    borderColor:"black",
+    borderWidth:2,
+    borderRadius:12,
+  },
+ });
+export default App;
