@@ -1,5 +1,4 @@
-
-import React, { useState , useEffect} from 'react';
+import React, { useState,useEffect } from 'react';
 import { DataTable } from 'react-native-paper';
 import { StyleSheet,Alert,ScrollView,Keyboard, Button, View, Text,TouchableOpacity,TextInput } from 'react-native';
 import AwesomeAlert from 'react-native-awesome-alerts';
@@ -13,20 +12,22 @@ const HomeScreen=({ navigation,route })=> {
    const [getPer,setPer]=useState(0)
    const [getList,setList]=useState([]);
    const [getYS,setYS]=useState(0);
-   
-   //const gl=route.params.getListofHistory
-    
-  console.log(route)
+    useEffect(() => {
+    // When returning from History Screen Update state
+    if (route.params?.getListofHistory) {
+      setList(route.params.getListofHistory);
+      // Reste Parameters
+      navigation.setParams({ getListofHistory: undefined });
+    }
+  });
    const onPressSave=()=>{
      if(getText.length>=1){
           var x = getText;
           var y = getPer;
           var l = x*(y/100);
           var z = (parseFloat(x).toFixed(2)) - (parseFloat(l).toFixed(2));
-          var cal = parseFloat(z).toFixed(2);
-
-          
-             setList([
+          var cal = parseFloat(z).toFixed(2);     
+          setList([
               ...getList,
               {key: Math.random().toString(),text:x,per:y,fp:cal}
               ])
@@ -37,12 +38,10 @@ const HomeScreen=({ navigation,route })=> {
         setDisText('')
      }    
   }
-  useEffect(() => {
-    if (route.params !== undefined) {
-      setList(route.params.getListofHistory);
-    }
-  });
-   
+navigation.setOptions({
+       headerRight: () => (<Button title="See History" onPress={() => navigation.navigate('History',{text:getText,per:getPer,save:getYS,fp:getDisText,getlist:getList,setlist:setList})}/>
+      ),
+    })
   return (
     <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
       <View style={styles.container}>
@@ -67,7 +66,6 @@ const HomeScreen=({ navigation,route })=> {
             />
         </View>
         
-    
        <View style={styles.outview}>  
           <Text style={styles.distext}>Final Price:{getText>-1 ? parseFloat(getText-getText*(getPer/100).toFixed(2)) : setText(0)}</Text>
        </View>
@@ -78,12 +76,6 @@ const HomeScreen=({ navigation,route })=> {
       <TouchableOpacity onPress={onPressSave}>
           <Text style={styles.texstyles}>SAVE</Text>           
       </TouchableOpacity>
-
-       React.useLayoutEffect(() =>{navigation.setOptions({
-       headerRight: () => (<Button title="See History" onPress={() => navigation.navigate('History',{text:getText,per:getPer,save:getYS,fp:getDisText,getlist:getList})}/>
-      ),
-    })
-  }  
         </View>      
     </View>
     </View>
@@ -102,25 +94,24 @@ const History=({ navigation ,route})=> {
   const deleteitem=(itemkey)=>{
     setList(list => getList.filter(item=>item.key!=itemkey));
   }
+  navigation.setOptions({
+       headerLeft: () => (<Button title="Back" onPress={() => navigation.navigate('Home',{getListofHistory:getList})}/>
+      ),
+    })
   return (
   <View style={styles.container}> 
             
-      React.useLayoutEffect(() =>{navigation.setOptions({
-       headerLeft: () => (<Button title="Back" onPress={() => navigation.navigate('Home',{getListofHistory:getList,setListofHistory:setList})}/>
-      ),
-    })
-  }
-  
+      
   <DataTable>
     <DataTable.Header style={styles.header}>
-      <DataTable.Title style={{flex:1}}>SR</DataTable.Title>
+      <DataTable.Title style={{flex:1}}>SR#</DataTable.Title>
       <DataTable.Title style={{flex:4}}>Orginal Price</DataTable.Title>
       <DataTable.Title numeric style={{flex:3}}>Discount</DataTable.Title>
       <DataTable.Title numeric style={{flex:4}}>Final Price</DataTable.Title>
       <DataTable.Title style={{flex:3}}>Delete</DataTable.Title>
     </DataTable.Header>
 {getList.map((item,index)=>  
-    <DataTable.Row  style={styles.table}>
+    <DataTable.Row style={styles.table}>
       <DataTable.Cell style={{fkex:1}}>{index+1}</DataTable.Cell>
       <DataTable.Cell style={{flex: 4}}>{item.text}</DataTable.Cell>
       <DataTable.Cell numeric style={{flex: 3}}>{item.per}</DataTable.Cell>
@@ -136,7 +127,7 @@ const History=({ navigation ,route})=> {
     )}
   </DataTable>
 </View>     
-  );
+  )
 }
 const Stack = createStackNavigator();
 
